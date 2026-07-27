@@ -26,7 +26,7 @@ class TeamManager
       team = Team.find_by(id: choice)
 
       if team
-        puts "#{team.name} (ID #{team.id})"
+        puts "\n#{team.name} (ID #{team.id})"
         puts "Record (Win/Lose/Tie): \e[32m#{team.games_won}\e[0m / \e[31m#{team.games_lost}\e[0m / \e[33m#{team.games_tied}\e[0m"
         wr = format("%.1f", (team.games_won.to_f / team.games_played) * 100)
         puts "Games Played (WR%): #{team.games_played} (#{wr}%)"
