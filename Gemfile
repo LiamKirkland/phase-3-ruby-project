@@ -6,6 +6,8 @@ source "https://rubygems.org"
 # https://guides.rubyonrails.org/active_record_basics.html
 gem "activerecord", "~> 7.1"
 
+gem "ostruct"
+
 # Run common tasks from the command line
 # https://github.com/ruby/rake
 gem "rake", "~> 13.0"
