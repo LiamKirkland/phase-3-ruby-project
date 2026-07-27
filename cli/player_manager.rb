@@ -1,6 +1,6 @@
 class PlayerManager
   def view_all_players
-    puts "-=All Players =-"
+    puts "\n-=All Players =-"
     players = Player.all
 
     if players.empty?

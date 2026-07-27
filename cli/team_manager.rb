@@ -1,6 +1,6 @@
 class TeamManager
   def view_all_teams
-    puts "-=All Teams =-"
+    puts "\n-=All Teams =-"
     teams = Team.all
 
     if teams.empty?

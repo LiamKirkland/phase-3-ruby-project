@@ -1,6 +1,6 @@
 class GameManager
   def view_all_games
-    puts "-=All Games =-"
+    puts "\n-=All Games =-"
     games = Game.all
 
     if games.empty?
