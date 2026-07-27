@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_27_143904) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_27_184954) do
   create_table "games", force: :cascade do |t|
     t.integer "home_team_id", null: false
     t.integer "away_team_id", null: false
@@ -30,13 +30,11 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_143904) do
     t.integer "running", null: false
     t.integer "pitching", null: false
     t.integer "fielding", null: false
-    t.integer "total_skill", null: false
     t.index ["team_id"], name: "index_players_on_team_id"
   end
 
   create_table "teams", force: :cascade do |t|
     t.string "name", null: false
-    t.integer "team_skill", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
