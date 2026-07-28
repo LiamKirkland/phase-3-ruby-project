@@ -60,7 +60,7 @@ class GameManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving game to database....\e[0m"
+        puts "\n\e[3;32mSaved game to database....\e[0m"
         new_game.save
         break
       else
@@ -102,13 +102,51 @@ class GameManager
           end
 
           if ['Y', 'YES'].include?(confirm)
-            puts "\n\e[3;32mSaving changes....\e[0m"
+            puts "\n\e[3;32mSaved changes....\e[0m"
             game.save
             break
           else
             puts "\e[3mRestarting form input....\e[0m\n"
           end
         end
+        break
+      else
+        puts FAILURE_MESSAGE
+      end
+    end
+  end
+
+  def delete_game
+    puts "\n-= Delete Game =-"
+    Game.all.each do |game|
+      puts "#{game.id}. \e[38;5;214m#{game.away_team.name}\e[0m at \e[36m#{game.home_team.name}\e[0m"
+    end
+    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+
+    loop do
+      puts "\nEnter the ID of the game you wish to delete:"
+      choice = gets.chomp
+
+      game = Game.find_by(id: choice)
+
+      if game
+        display_game(game)
+
+        confirm = nil
+        loop do
+          print "\n⚠️ \e[1;33mAre you sure you want to delete this game? This action cannot be undone: \e[0m"
+          confirm = gets.chomp.upcase
+          break if ['Y', 'N', 'YES', 'NO'].include?(confirm)
+
+          puts FAILURE_MESSAGE
+        end
+
+        if ['Y', 'YES'].include?(confirm)
+          puts "\n\e[3;31mGame has been deleted.\e[0m"
+          game.destroy
+          break
+        end
+
         break
       else
         puts FAILURE_MESSAGE

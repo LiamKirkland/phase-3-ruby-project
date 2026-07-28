@@ -52,7 +52,7 @@ class BackyardBaseball
       when "8" then @gm.update_game
       when "9" then @pm.update_player
       when "0" then puts "You chose 0"
-      when "a" then puts "You chose a"
+      when "a" then @gm.delete_game
       when "b" then puts "You chose b"
       when "c" then @tm.view_team
       when "d" then @gm.view_game

@@ -60,7 +60,7 @@ class PlayerManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving player to database....\e[0m"
+        puts "\n\e[3;32mSaved #{new_player.name} to database....\e[0m"
         new_player.save
         break
       else
@@ -103,7 +103,7 @@ class PlayerManager
           end
 
           if ['Y', 'YES'].include?(confirm)
-            puts "\n\e[3;32mSaving changes....\e[0m"
+            puts "\n\e[3;32mSaved changes....\e[0m"
             player.save
             break
           else

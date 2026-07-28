@@ -78,7 +78,7 @@ class TeamManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving #{name} to database....\e[0m"
+        puts "\n\e[3;32mSaved #{name} to database....\e[0m"
         Team.create!(name: name)
         break
       else
@@ -138,6 +138,10 @@ class TeamManager
     end
   end
 
+  def delete_team
+    puts "\n-= Delete A Team =-"
+  end
+
   private
 
   def display_team(team)
@@ -175,7 +179,7 @@ class TeamManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving #{name} to database....\e[0m"
+        puts "\n\e[3;32mSaved #{name} to database....\e[0m"
         team.update(name: name)
         break
       else
