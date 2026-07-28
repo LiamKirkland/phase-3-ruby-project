@@ -18,7 +18,7 @@ class GameManager
   def view_game
     puts "\n-= View Game Details =-"
     Game.all.each do |game|
-      puts "#{game.id}. \e[38;5;214m#{game.away_team.name}\e[0m at \e[36m#{game.home_team.name}\e[0m"
+      puts "#{game.id}. \e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m at \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
     end
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
     loop do
@@ -28,10 +28,22 @@ class GameManager
       game = Game.find_by(id: choice)
 
       if game
-        puts "\n\e[38;5;214m#{game.away_team.name}\e[0m v. \e[36m#{game.home_team.name}\e[0m (ID #{game.id})"
+        puts "\n\e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m v. \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m (ID #{game.id})"
         puts "Final Score: \e[38;5;214m#{game.away_score}\e[0m to \e[36m#{game.home_score}\e[0m"
-        away_star = game.away_team.players.order(total_skill: :desc).first.name
-        home_star = game.home_team.players.order(total_skill: :desc).first.name
+        away_star = if game.away_team.nil?
+                      "\e[3mTeam Deleted\e[0m"
+                    elsif game.away_team.players.empty?
+                      "\e[3mNo Players\e[0m"
+                    else
+                      game.away_team.players.max_by(&:total_skill).name
+                    end
+        home_star = if game.home_team.nil?
+                      "\e[3mTeam Deleted\e[0m"
+                    elsif game.home_team.players.empty?
+                      "\e[3mNo Players\e[0m"
+                    else
+                      game.home_team.players.max_by(&:total_skill).name
+                    end
         puts "Star Players: \e[38;5;214m#{away_star}\e[0m & \e[36m#{home_star}\e[0m"
         puts "Played on #{game.date_played.strftime('%m/%d/%Y')}"
         break
@@ -72,7 +84,7 @@ class GameManager
   def update_game
     puts "\n-= Update Game =-"
     Game.all.each do |game|
-      puts "#{game.id}. \e[38;5;214m#{game.away_team.name}\e[0m at \e[36m#{game.home_team.name}\e[0m"
+      puts "#{game.id}. \e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m at \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
     end
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
@@ -119,7 +131,7 @@ class GameManager
   def delete_game
     puts "\n-= Delete Game =-"
     Game.all.each do |game|
-      puts "#{game.id}. \e[38;5;214m#{game.away_team.name}\e[0m at \e[36m#{game.home_team.name}\e[0m"
+      puts "#{game.id}. \e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m at \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
     end
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
@@ -130,8 +142,8 @@ class GameManager
       game = Game.find_by(id: choice)
 
       if game
+        puts "=" * 50
         display_game(game)
-
         confirm = nil
         loop do
           print "\n⚠️ \e[1;33mAre you sure you want to delete this game? This action cannot be undone: \e[0m"
@@ -142,8 +154,8 @@ class GameManager
         end
 
         if ['Y', 'YES'].include?(confirm)
-          puts "\n\e[3;31mGame has been deleted.\e[0m"
           game.destroy
+          puts "\n\e[3;31mGame has been deleted.\e[0m"
           break
         end
 
@@ -158,8 +170,8 @@ class GameManager
 
   def display_game(game)
     puts "ID: #{game.id}" if game.id
-    puts "\e[38;5;214mAway Team\e[0m: #{game.away_team.name}"
-    puts "\e[36mHome Team\e[0m: #{game.home_team.name}"
+    puts "\e[38;5;214mAway Team\e[0m: #{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}"
+    puts "\e[36mHome Team\e[0m: #{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}"
     puts "Final Score: \e[38;5;214m#{game.away_score}\e[0m - \e[36m#{game.home_score}\e[0m "
     puts "Date Played: #{game.date_played.strftime('%m/%d/%Y')}"
   end

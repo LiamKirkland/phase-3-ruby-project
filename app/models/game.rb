@@ -7,10 +7,10 @@ class Game < ActiveRecord::Base
 
   def matchup_vs(team)
     if home_team_id == team.id
-      puts "  \e[36mHome\e[0m v. \e[38;5;214m#{away_team.name}\e[0m"
+      puts "  \e[36mHome\e[0m v. \e[38;5;214m#{away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
       puts "  Final Score: \e[36m#{home_score}\e[0m to \e[38;5;214m#{away_score}\e[0m"
     else
-      puts "  \e[38;5;214mAway\e[0m v. \e[36m#{home_team.name}\e[0m"
+      puts "  \e[38;5;214mAway\e[0m v. \e[36m#{home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
       puts "  Final Score: \e[38;5;214m#{away_score}\e[0m to \e[36m#{home_score}\e[0m"
     end
   end
