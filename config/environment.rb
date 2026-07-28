@@ -2,6 +2,8 @@
 
 ENV["RACK_ENV"] ||= "development"
 
+FAILURE_MESSAGE = "\e[3;31mInvalid input. Please try again.\e[0m"
+
 # Require in Gems
 require "bundler/setup"
 Bundler.require(:default, ENV.fetch("RACK_ENV", nil))

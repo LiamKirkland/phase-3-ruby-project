@@ -1,92 +1,78 @@
-# frozen_string_literal: true
+# db/seeds.rb
 
-puts "🌱 Seeding spices..."
+Game.destroy_all
+Player.destroy_all
+Team.destroy_all
 
-# Seed your database here
-# Clear existing data to prevent duplicate primary key or foreign key constraint issues
-puts "Clearing old data..."
-Game.delete_all
-Player.delete_all
-Team.delete_all
+teams = Team.create!([
+  { name: "Sunnyside Sluggers" },
+  { name: "Southside Sneakers" },
+  { name: "Bayview Bandits" },
+])
 
-puts "Creating Backyard Baseball teams..."
-# 1998 Backyard Baseball Teams (Picked from the standard custom choices)
-melonheads = Team.create!(name: "Humongous Melonheads")
-wombats    = Team.create!(name: "Mighty Wombats")
-monsters   = Team.create!(name: "Melrose Monsters")
-fishes     = Team.create!(name: "Screaming Fishes")
+sluggers = teams[0]
+sneakers = teams[1]
+bandits = teams[2]
 
-puts "Creating Backyard Baseball kids..."
-# Custom player list with statistics capped out of 10, total_skill capped at 25.
-# Format: [name, batting, running, pitching, fielding, team_object]
-players_data = [
-  # --- Humongous Melonheads ---
-  ["Pablo Sanchez",     10, 9, 5, 8, melonheads], # The GOAT. Stats balanced to fit your 25 max total cap
-  ["Achmed Khan",        9, 6, 2, 7, melonheads],
-  ["Jocinda Smith",      8, 5, 4, 8, melonheads],
-  
-  # --- Mighty Wombats ---
-  ["Pete Wheeler",       5, 10, 2, 6, wombats],    # Ultimate speed
-  ["Keisha Phillips",    9, 7,  3, 6, wombats],
-  ["Vicki Kawaguchi",    3, 9,  2, 9, wombats],
+Player.create!([
+  # Sunnyside Sluggers (9 players)
+  { name: "Pablo Sanchez",       team: sluggers, batting: 9, running: 8, pitching: 4, fielding: 4 },
+  { name: "Pete Wheeler",        team: sluggers, batting: 8, running: 5, pitching: 5, fielding: 6 },
+  { name: "Kenny Kawaguchi",     team: sluggers, batting: 3, running: 4, pitching: 9, fielding: 8 },
+  { name: "Kiesha Phillips",     team: sluggers, batting: 6, running: 9, pitching: 3, fielding: 5 },
+  { name: "Vicki Vanderwoozle",  team: sluggers, batting: 4, running: 3, pitching: 2, fielding: 9 },
+  { name: "Timmy Lupus",         team: sluggers, batting: 1, running: 2, pitching: 1, fielding: 3 },
+  { name: "Stephanie Morgan",    team: sluggers, batting: 7, running: 6, pitching: 4, fielding: 6 },
+  { name: "Sally Dobbs",         team: sluggers, batting: 5, running: 5, pitching: 5, fielding: 5 },
+  { name: "Dimitri Petrovic",    team: sluggers, batting: 6, running: 4, pitching: 8, fielding: 4 },
 
-  # --- Melrose Monsters ---
-  ["Mikey Thomas",       9, 3,  2, 5, monsters],   # Power hitter, slow runner
-  ["Angela Delvecchio",  4, 3,  10, 6, monsters],  # Ace pitcher
-  ["Dmitri Petrovich",   7, 5,  4, 6, monsters],
+  # Southside Sneakers (9 players)
+  { name: "Reese Worthington",   team: sneakers, batting: 7, running: 5, pitching: 3, fielding: 7 },
+  { name: "Tony Delvecchio",     team: sneakers, batting: 8, running: 6, pitching: 5, fielding: 5 },
+  { name: "Mikey Thomas",        team: sneakers, batting: 4, running: 6, pitching: 3, fielding: 5 },
+  { name: "Amir Khan",           team: sneakers, batting: 6, running: 7, pitching: 6, fielding: 4 },
+  { name: "Achmed Khan",         team: sneakers, batting: 3, running: 4, pitching: 9, fielding: 7 },
+  { name: "Egghead",             team: sneakers, batting: 2, running: 1, pitching: 2, fielding: 4 },
+  { name: "Freddy Fernandez",    team: sneakers, batting: 5, running: 8, pitching: 4, fielding: 6 },
+  { name: "Lisa Crocket",        team: sneakers, batting: 6, running: 5, pitching: 4, fielding: 8 },
+  { name: "Gretchen Hasslein",   team: sneakers, batting: 7, running: 4, pitching: 6, fielding: 5 },
 
-  # --- Screaming Fishes ---
-  ["Stephanie Morgan",   6, 6,  3, 10, fishes],   # Star shortstop
-  ["Kenny Kawaguchi",    4, 6,  8,  5, fishes],   # Wheelchair ace
-  ["Luanne Lui",         3, 9,  3,  8, fishes]
-]
+  # Bayview Bandits (6 players, under the 9 max)
+  { name: "Ronaldo Devers",      team: bandits, batting: 8, running: 7, pitching: 4, fielding: 3 },
+  { name: "Maria Luna",          team: bandits, batting: 5, running: 5, pitching: 7, fielding: 6 },
+  { name: "Jorge Garcia",        team: bandits, batting: 6, running: 6, pitching: 6, fielding: 6 },
+  { name: "Danny Rodriguez",     team: bandits, batting: 4, running: 9, pitching: 2, fielding: 8 },
+  { name: "Keiko Ando",          team: bandits, batting: 7, running: 4, pitching: 8, fielding: 5 },
+  { name: "Pumpkin Marchetti",   team: bandits, batting: 3, running: 3, pitching: 5, fielding: 9 },
 
-players_data.each do |name, batting, running, pitching, fielding, team|
-  # Calculate total skill and ensure it strictly caps at 25 if data adjusts
-  calculated_total = batting + running + pitching + fielding
-  final_total = [calculated_total, 25].min
+  # Free agents (no team)
+  { name: "Angela Delvecchio",   team: nil, batting: 6, running: 6, pitching: 5, fielding: 6 },
+  { name: "Harold Chen",         team: nil, batting: 4, running: 5, pitching: 7, fielding: 6 },
+  { name: "Bea Spivey",          team: nil, batting: 5, running: 5, pitching: 5, fielding: 5 },
+])
 
-  Player.create!(
-    name: name,
-    team: team,
-    batting: batting,
-    running: running,
-    pitching: pitching,
-    fielding: fielding,
-    total_skill: final_total
-  )
-end
+Game.create!([
+  {
+    home_team: sluggers,
+    away_team: sneakers,
+    home_score: 7,
+    away_score: 4,
+    date_played: DateTime.new(2026, 6, 12),
+  },
+  {
+    home_team: bandits,
+    away_team: sluggers,
+    home_score: 3,
+    away_score: 9,
+    date_played: DateTime.new(2026, 6, 19),
+  },
+  {
+    home_team: sneakers,
+    away_team: bandits,
+    home_score: 5,
+    away_score: 5,
+    date_played: DateTime.new(2026, 6, 26),
+  },
+])
 
-Player.create!(name: "Leem", batting: 9, running: 3, pitching: 4, fielding: 6, total_skill: 22)
-
-puts "Creating sample historical games..."
-# Sample matchups between the created clubs
-Game.create!(
-  home_team_id: melonheads.id,
-  away_team_id: wombats.id,
-  home_score: 7,
-  away_score: 4,
-  date_played: DateTime.new(2026, 7, 20, 14, 0, 0)
-)
-
-Game.create!(
-  home_team_id: monsters.id,
-  away_team_id: fishes.id,
-  home_score: 2,
-  away_score: 3,
-  date_played: DateTime.new(2026, 7, 22, 16, 30, 0)
-)
-
-Game.create!(
-  home_team_id: wombats.id,
-  away_team_id: monsters.id,
-  home_score: 11,
-  away_score: 5,
-  date_played: DateTime.new(2026, 7, 25, 10, 0, 0)
-)
-
-puts "Database seeded successfully!"
-puts "Created #{Team.count} teams, #{Player.count} players, and #{Game.count} games."
-
-
-puts "✅ Done seeding!"
+puts "Seeded #{Team.count} teams, #{Player.count} players (#{Player.where(team_id: nil).count} free agents), and #{Game.count} games."
