@@ -66,7 +66,7 @@ class TeamManager
         puts "Cannot have an empty team name"
       end
 
-      puts %(\n⚠️\e[33mYou're about to create a team with the name "#{name}"\e[0m)
+      puts %(\n⚠️ \e[33mYou're about to create a team with the name "#{name}"\e[0m)
       confirm = nil
       loop do
         print "Does this look correct? (Y/N): "
@@ -79,7 +79,7 @@ class TeamManager
 
       if ['Y', 'YES'].include?(confirm)
         puts "\n\e[3;32mSaving #{name} to database....\e[0m"
-        Team.create!(name: name).save
+        Team.create!(name: name)
         break
       else
         puts "\e[3mRestarting form input....\e[0m"
@@ -163,7 +163,7 @@ class TeamManager
         puts "Cannot have an empty team name"
       end
 
-      puts %(\n⚠️\e[33mYou're about to update your team with the name "#{name}"\e[0m)
+      puts %(\n⚠️ \e[33mYou're about to update your team with the name "#{name}"\e[0m)
       confirm = nil
       loop do
         print "Does this look correct? (Y/N): "
