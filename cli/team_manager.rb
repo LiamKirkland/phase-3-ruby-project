@@ -66,7 +66,7 @@ class TeamManager
         puts "Cannot have an empty team name"
       end
 
-      puts %(You're about to create a team with the name "#{name}")
+      puts %(\n⚠️\e[33mYou're about to create a team with the name "#{name}"\e[0m)
       confirm = nil
       loop do
         print "Does this look correct? (Y/N): "
@@ -78,7 +78,7 @@ class TeamManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "Saving #{name} to database...."
+        puts "\n\e[3;32mSaving #{name} to database....\e[0m"
         Team.create!(name: name).save
         break
       else
@@ -163,7 +163,7 @@ class TeamManager
         puts "Cannot have an empty team name"
       end
 
-      puts %(You're about to update your team with the name "#{name}")
+      puts %(\n⚠️\e[33mYou're about to update your team with the name "#{name}"\e[0m)
       confirm = nil
       loop do
         print "Does this look correct? (Y/N): "
@@ -175,7 +175,7 @@ class TeamManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "Saving #{name} to database...."
+        puts "\n\e[3;32mSaving #{name} to database....\e[0m"
         team.update(name: name)
         break
       else
@@ -187,6 +187,7 @@ class TeamManager
   def update_players(team_id)
     loop do
       team = Team.find(team_id)
+      puts "=" * 50
       puts "\nCurrent Team Players:"
       if team.players.empty?
         puts "  \e[3mThis team has no players.\e[0m"
@@ -199,7 +200,7 @@ class TeamManager
       puts "\nCurrent Free Agents:"
       free_agents = Player.where(team_id: nil)
       if free_agents.empty?
-        puts "  \e[3mThis team has no players.\e[0m"
+        puts "  \e[3mThere are currently no free agents.\e[0m"
       else
         free_agents.each do |player|
           puts "  ID #{player.id}: #{player.name} (Rating: #{player.total_skill})"
