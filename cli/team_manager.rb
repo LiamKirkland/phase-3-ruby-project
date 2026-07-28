@@ -78,7 +78,7 @@ class TeamManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving #{name} to database....\e[0m"
+        puts "\n\e[3;32mSaved #{name} to database....\e[0m"
         Team.create!(name: name)
         break
       else
@@ -138,6 +138,45 @@ class TeamManager
     end
   end
 
+  def delete_team
+    puts "\n-= Delete Team =-"
+    Team.all.each do |team|
+      puts "#{team.id}. #{team.name}"
+    end
+    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+
+    loop do
+      puts "\nEnter the ID of the team you wish to delete:"
+      choice = gets.chomp
+
+      team = Team.find_by(id: choice)
+
+      if team
+        puts "=" * 50
+        display_team(team)
+
+        confirm = nil
+        loop do
+          print "\n⚠️ \e[1;33mAre you sure you want to delete this team? This action cannot be undone: \e[0m"
+          confirm = gets.chomp.upcase
+          break if ['Y', 'N', 'YES', 'NO'].include?(confirm)
+
+          puts FAILURE_MESSAGE
+        end
+
+        if ['Y', 'YES'].include?(confirm)
+          team.destroy
+          puts "\n\e[3;31mTeam has been deleted.\e[0m"
+          break
+        end
+
+        break
+      else
+        puts FAILURE_MESSAGE
+      end
+    end
+  end
+
   private
 
   def display_team(team)
@@ -175,7 +214,7 @@ class TeamManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving #{name} to database....\e[0m"
+        puts "\n\e[3;32mSaved #{name} to database....\e[0m"
         team.update(name: name)
         break
       else

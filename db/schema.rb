@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_27_184954) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_28_190344) do
   create_table "games", force: :cascade do |t|
-    t.integer "home_team_id", null: false
-    t.integer "away_team_id", null: false
+    t.integer "home_team_id"
+    t.integer "away_team_id"
     t.integer "home_score", null: false
     t.integer "away_score", null: false
     t.datetime "date_played", null: false
@@ -39,7 +39,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_27_184954) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "games", "teams", column: "away_team_id"
-  add_foreign_key "games", "teams", column: "home_team_id"
+  add_foreign_key "games", "teams", column: "away_team_id", on_delete: :nullify
+  add_foreign_key "games", "teams", column: "home_team_id", on_delete: :nullify
   add_foreign_key "players", "teams"
 end

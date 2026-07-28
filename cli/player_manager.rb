@@ -42,7 +42,7 @@ class PlayerManager
   end
 
   def create_player
-    puts "\n-= Create New Game =-"
+    puts "\n-= Create New Player =-"
     loop do
       player_hash = prompt_player_attributes
       new_player = Player.new(player_hash)
@@ -60,7 +60,7 @@ class PlayerManager
       end
 
       if ['Y', 'YES'].include?(confirm)
-        puts "\n\e[3;32mSaving player to database....\e[0m"
+        puts "\n\e[3;32mSaved #{new_player.name} to database....\e[0m"
         new_player.save
         break
       else
@@ -103,13 +103,53 @@ class PlayerManager
           end
 
           if ['Y', 'YES'].include?(confirm)
-            puts "\n\e[3;32mSaving changes....\e[0m"
+            puts "\n\e[3;32mSaved changes....\e[0m"
             player.save
             break
           else
             puts "\e[3mRestarting form input....\e[0m\n"
           end
         end
+        break
+      else
+        puts FAILURE_MESSAGE
+      end
+    end
+  end
+
+  def delete_player
+    puts "\n-= Delete Player =-"
+    Player.all.each do |player|
+      team_name = player.team ? player.team.name : "Free Agent"
+      puts "#{player.id}. #{player.name} (#{team_name})"
+    end
+    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+
+    loop do
+      puts "\nEnter the ID of the player you wish to delete:"
+      choice = gets.chomp
+
+      player = Player.find_by(id: choice)
+
+      if player
+        puts "=" * 50
+        display_player(player)
+
+        confirm = nil
+        loop do
+          print "\n⚠️ \e[1;33mAre you sure you want to delete this player? This action cannot be undone: \e[0m"
+          confirm = gets.chomp.upcase
+          break if ['Y', 'N', 'YES', 'NO'].include?(confirm)
+
+          puts FAILURE_MESSAGE
+        end
+
+        if ['Y', 'YES'].include?(confirm)
+          player.destroy
+          puts "\n\e[3;31mPlayer has been deleted.\e[0m"
+          break
+        end
+
         break
       else
         puts FAILURE_MESSAGE
