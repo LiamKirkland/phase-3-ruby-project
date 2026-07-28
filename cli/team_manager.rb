@@ -41,7 +41,7 @@ class TeamManager
             puts "  ID #{player.id}: #{player.name} (Rating: #{player.total_skill})"
           end
         end
-
+        puts "Team Rating: #{team.skill}"
         puts "Most Recent Game:"
         game = team.games.order(date_played: :desc).first
         puts "  #{game ? game.date_played.strftime('%m/%d/%Y') : "\e[3mThis team hasn't played any games yet.\e[0m"}"
@@ -218,6 +218,8 @@ class TeamManager
         if picked_player.team_id == team.id
           picked_player.team_id = nil
           puts "\e[31m#{picked_player.name} has been removed\e[0m"
+        elsif team.players.count >= 9
+          puts "\e[33mCannot have more than 9 players on a team\e[0m"
         elsif picked_player.team_id.nil?
           picked_player.team_id = team.id
           puts "\e[32m#{picked_player.name} has been added\e[0m"

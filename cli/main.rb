@@ -47,10 +47,10 @@ class BackyardBaseball
       when "3" then @pm.view_all_players
       when "4" then @tm.create_team
       when "5" then @gm.create_game
-      when "6" then puts "You chose 6"
+      when "6" then @pm.create_player
       when "7" then @tm.update_team
       when "8" then @gm.update_game
-      when "9" then puts "You chose 9"
+      when "9" then @pm.update_player
       when "0" then puts "You chose 0"
       when "a" then puts "You chose a"
       when "b" then puts "You chose b"
