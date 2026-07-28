@@ -25,4 +25,8 @@ class Team < ActiveRecord::Base
     home_games.where("home_score = away_score").count +
       away_games.where("away_score = home_score").count
   end
+
+  def skill
+    players.reduce(0) { |sum, player| sum + player.total_skill }
+  end
 end

@@ -1,9 +1,21 @@
 #!/usr/bin/env ruby
 
 require_relative "../config/environment"
+require_relative "team_manager"
+require_relative "game_manager"
+require_relative "player_manager"
 
 class BackyardBaseball
+  FAILURE_MESSAGE = "\e[3;31mInvalid input. Please try again.\e[0m".freeze
+
+  def initialize
+    @tm = TeamManager.new
+    @gm = GameManager.new
+    @pm = PlayerManager.new
+  end
+
   def display_menu
+    puts "\n-= Backyard Baseball =-"
     puts "1. View All Teams"
     puts "2. View All Games"
     puts "3. View All Players"
@@ -32,9 +44,9 @@ class BackyardBaseball
       choice = gets.chomp.downcase
 
       case choice
-      when "1" then puts "You chose 1"
-      when "2" then puts "You chose 2"
-      when "3" then puts "You chose 3"
+      when "1" then @tm.view_all_teams
+      when "2" then @gm.view_all_games
+      when "3" then @pm.view_all_players
       when "4" then puts "You chose 4"
       when "5" then puts "You chose 5"
       when "6" then puts "You chose 6"
@@ -44,17 +56,19 @@ class BackyardBaseball
       when "0" then puts "You chose 0"
       when "a" then puts "You chose a"
       when "b" then puts "You chose b"
-      when "c" then puts "You chose c"
-      when "d" then puts "You chose d"
-      when "e" then puts "You chose e"
+      when "c" then @tm.view_team
+      when "d" then @gm.view_game
+      when "e" then @pm.view_player
       when "q", "quit", "exit"
         puts "Goodbye!"
         break
       else
-        puts "Invalid choice. Please try again."
+        puts FAILURE_MESSAGE
       end
     end
   end
+
+  # private
 end
 
 BackyardBaseball.new.run if __FILE__ == $PROGRAM_NAME
