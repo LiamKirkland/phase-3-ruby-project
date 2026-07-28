@@ -6,8 +6,6 @@ require_relative "game_manager"
 require_relative "player_manager"
 
 class BackyardBaseball
-  FAILURE_MESSAGE = "\e[3;31mInvalid input. Please try again.\e[0m".freeze
-
   def initialize
     @tm = TeamManager.new
     @gm = GameManager.new
@@ -47,10 +45,10 @@ class BackyardBaseball
       when "1" then @tm.view_all_teams
       when "2" then @gm.view_all_games
       when "3" then @pm.view_all_players
-      when "4" then puts "You chose 4"
+      when "4" then @tm.create_team
       when "5" then puts "You chose 5"
       when "6" then puts "You chose 6"
-      when "7" then puts "You chose 7"
+      when "7" then @tm.update_team
       when "8" then puts "You chose 8"
       when "9" then puts "You chose 9"
       when "0" then puts "You chose 0"

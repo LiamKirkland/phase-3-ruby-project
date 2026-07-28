@@ -2,6 +2,9 @@ class Game < ActiveRecord::Base
   belongs_to :home_team, class_name: "Team", inverse_of: :home_games
   belongs_to :away_team, class_name: "Team", inverse_of: :away_games
 
+  validates :home_score, numericality: { greater_than: 0 }
+  validates :away_score, numericality: { greater_than: 0 }
+
   def matchup_vs(team)
     if home_team_id == team.id
       puts "  \e[36mHome\e[0m v. \e[33m#{away_team.name}\e[0m"
