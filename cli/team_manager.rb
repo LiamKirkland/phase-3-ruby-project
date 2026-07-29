@@ -2,6 +2,7 @@ require_relative "../config/environment"
 
 class TeamManager
   def view_all_teams
+    display_banner
     puts "\n-=All Teams =-"
     teams = Team.all
 
@@ -16,16 +17,21 @@ class TeamManager
   end
 
   def view_team
+    display_banner
     puts "\n-= View Team Details =-"
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+
     loop do
-      puts "\nEnter the ID of the team you wish to view:"
+      print "\nEnter the number of the team you wish to view: "
       choice = gets.chomp
 
-      team = Team.find_by(id: choice)
+      team = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, teams.size)
+               teams[choice.to_i - 1]
+             end
 
       if team
         puts "\n#{team.name} (ID #{team.id})"
@@ -54,12 +60,13 @@ class TeamManager
   end
 
   def create_team
+    display_banner
     puts "\n-= Create New Team =-"
 
     loop do
       name = ""
       loop do
-        puts "\nEnter your team name:"
+        print "\nEnter your team name: "
         name = gets.chomp
 
         break unless name == ""
@@ -88,43 +95,50 @@ class TeamManager
   end
 
   def update_team
+    display_banner
     puts "\n-= Update Team =-"
 
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      puts "\nEnter the ID of the team you wish to edit:"
+      print "\nEnter the number of the team you wish to update: "
       choice = gets.chomp
 
-      team = Team.find_by(id: choice)
+      team = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, teams.size)
+               teams[choice.to_i - 1]
+             end
 
       if team
-        loop do
-          puts "\n#{team.name} (ID #{team.id})"
-          puts "Players:"
-          if team.players.empty?
-            puts "  \e[3mThis team has no players.\e[0m"
-          else
-            team.players.each do |player|
-              puts "  ID #{player.id}: #{player.name} (Rating: #{player.total_skill})"
-            end
+        puts "\n#{team.name} (ID #{team.id})"
+        puts "Players:"
+        if team.players.empty?
+          puts "  \e[3mThis team has no players.\e[0m"
+        else
+          team.players.each do |player|
+            puts "  ID #{player.id}: #{player.name} (Rating: #{player.total_skill})"
           end
-          puts "\n1. Team Name"
-          puts "2. Players"
-          puts "q. Quit"
-          puts "\n\e[3mNote: If you are trying to add/remove games to this team, you must edit the game(s) directly.\e[0m"
-          puts "Select what you want to edit:"
+        end
+        puts "\n1. Team Name"
+        puts "2. Players"
+        puts "b. Back to Team Management"
+        puts "\n\e[3mNote: If you are trying to add/remove games to this team, you must edit the game(s) directly.\e[0m"
+
+        loop do
+          print "Select what you want to edit: "
           choice = gets.chomp.downcase
 
           case choice
           when "1"
             update_name(team)
+            break
           when "2"
             update_players(team.id)
-          when "q", "quit", "exit"
+            break
+          when "b", "back", "exit"
             puts "Backing out of edit."
             break
           else
@@ -139,17 +153,21 @@ class TeamManager
   end
 
   def delete_team
+    display_banner
     puts "\n-= Delete Team =-"
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      puts "\nEnter the ID of the team you wish to delete:"
+      print "\nEnter the number of the team you wish to delete: "
       choice = gets.chomp
 
-      team = Team.find_by(id: choice)
+      team = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, teams.size)
+               teams[choice.to_i - 1]
+             end
 
       if team
         puts "=" * 50
@@ -194,7 +212,7 @@ class TeamManager
       name = team.name
       loop do
         puts "Your current team name is #{team.name}"
-        puts "\nEnter the new team name:"
+        print "\nEnter the new team name: "
         name = gets.chomp
 
         break unless name == ""
@@ -246,10 +264,10 @@ class TeamManager
         end
       end
 
-      puts "Enter the ID of the player you want to add or remove from the team. Type quit when you're finished:"
+      print "Enter the ID of the player you want to add or remove from the team. Type back when you're finished: "
       choice = gets.chomp.downcase
 
-      break if ["quit", "q"].include?(choice)
+      break if ["back", "b"].include?(choice)
 
       picked_player = Player.find_by(id: choice)
 

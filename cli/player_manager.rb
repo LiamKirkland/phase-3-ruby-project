@@ -1,5 +1,6 @@
 class PlayerManager
   def view_all_players
+    display_banner
     puts "\n-=All Players =-"
     players = Player.all
 
@@ -14,16 +15,20 @@ class PlayerManager
   end
 
   def view_player
+    display_banner
     puts "\n-= View Player Details =-"
-    Player.all.each do |player|
-      puts "#{player.id}. #{player.name}"
+    players = Player.all.to_a
+
+    players.each_with_index do |player, index|
+      puts "#{index + 1}. #{player.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
     loop do
-      puts "\nEnter the ID of the player you wish to view:"
+      print "\nEnter the number of the player you wish to view: "
       choice = gets.chomp
 
-      player = Player.find_by(id: choice)
+      player = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, players.size)
+                 players[choice.to_i - 1]
+               end
 
       if player
         puts "\n#{player.name} (ID #{player.id})"
@@ -42,6 +47,7 @@ class PlayerManager
   end
 
   def create_player
+    display_banner
     puts "\n-= Create New Player =-"
     loop do
       player_hash = prompt_player_attributes
@@ -70,18 +76,20 @@ class PlayerManager
   end
 
   def update_player
+    display_banner
     puts "\n-= Update Player =-"
-    Player.all.each do |player|
-      team_name = player.team ? player.team.name : "Free Agent"
-      puts "#{player.id}. #{player.name} (#{team_name})"
-    end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+    players = Player.all.to_a
 
+    players.each_with_index do |player, index|
+      puts "#{index + 1}. #{player.name}"
+    end
     loop do
-      puts "\nEnter the ID of the player you wish to update:"
+      print "\nEnter the number of the player you wish to update: "
       choice = gets.chomp
 
-      player = Player.find_by(id: choice)
+      player = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, players.size)
+                 players[choice.to_i - 1]
+               end
 
       if player
         display_player(player)
@@ -118,18 +126,20 @@ class PlayerManager
   end
 
   def delete_player
+    display_banner
     puts "\n-= Delete Player =-"
-    Player.all.each do |player|
-      team_name = player.team ? player.team.name : "Free Agent"
-      puts "#{player.id}. #{player.name} (#{team_name})"
-    end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+    players = Player.all.to_a
 
+    players.each_with_index do |player, index|
+      puts "#{index + 1}. #{player.name}"
+    end
     loop do
-      puts "\nEnter the ID of the player you wish to delete:"
+      print "\nEnter the number of the player you wish to delete: "
       choice = gets.chomp
 
-      player = Player.find_by(id: choice)
+      player = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, players.size)
+                 players[choice.to_i - 1]
+               end
 
       if player
         puts "=" * 50
@@ -198,13 +208,14 @@ class PlayerManager
       break
     end
 
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
 
     current_team_label = player_hash[:team_id] ? Team.find(player_hash[:team_id]).name : "Free Agent"
     loop do
-      print "Enter the player's team ID#{" [#{current_team_label}]" if existing_player} (type 'none' for free agent): "
+      print "Enter the player's team number#{" [#{current_team_label}]" if existing_player} (type 'none' for free agent): "
       input = gets.chomp
       stripped = input.strip
 
@@ -213,20 +224,16 @@ class PlayerManager
       elsif stripped.downcase == "none"
         player_hash[:team_id] = nil
         break
-      elsif stripped.empty?
-        puts FAILURE_MESSAGE
-      else
-        team = Team.find_by(id: stripped)
-        if team
-          if team.players.where.not(id: existing_player&.id).count >= 9
-            puts "\e[33mCannot have more than 9 players on a team\e[0m"
-          else
-            player_hash[:team_id] = team.id
-            break
-          end
+      elsif stripped.match?(/\A\d+\z/) && stripped.to_i.between?(1, teams.size)
+        team = teams[stripped.to_i - 1]
+        if team.players.where.not(id: existing_player&.id).count >= 9
+          puts "\e[33mCannot have more than 9 players on a team\e[0m"
         else
-          puts FAILURE_MESSAGE
+          player_hash[:team_id] = team.id
+          break
         end
+      else
+        puts FAILURE_MESSAGE
       end
     end
 
@@ -251,11 +258,9 @@ class PlayerManager
       end
 
       total = player_hash.values_at(*skill_keys).sum
-      if total <= 25
-        break
-      else
-        puts "⚠️ \e[33mA player's skills cannot total more than 25. Please re-enter skills.\e[0m"
-      end
+      break if total <= 25
+
+      puts "⚠️ \e[33mA player's skills cannot total more than 25. Please re-enter skills.\e[0m"
     end
 
     player_hash
