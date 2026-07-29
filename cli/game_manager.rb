@@ -17,15 +17,21 @@ class GameManager
 
   def view_game
     puts "\n-= View Game Details =-"
-    Game.all.each do |game|
-      puts "#{game.id}. \e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m at \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
+    games = Game.all.to_a
+
+    games.each_with_index do |game, index|
+      away_name = game.away_team&.name || "\e[3mTeam Deleted\e[0m"
+      home_name = game.home_team&.name || "\e[3mTeam Deleted\e[0m"
+      puts "#{index + 1}. \e[38;5;214m#{away_name}\e[0m at \e[36m#{home_name}\e[0m"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+
     loop do
-      puts "\nEnter the ID of the game you wish to view:"
+      print "\nEnter the number of the game you wish to view: "
       choice = gets.chomp
 
-      game = Game.find_by(id: choice)
+      game = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, games.size)
+               games[choice.to_i - 1]
+             end
 
       if game
         puts "\n\e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m v. \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m (ID #{game.id})"
@@ -83,16 +89,21 @@ class GameManager
 
   def update_game
     puts "\n-= Update Game =-"
-    Game.all.each do |game|
-      puts "#{game.id}. \e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m at \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
+    games = Game.all.to_a
+
+    games.each_with_index do |game, index|
+      away_name = game.away_team&.name || "\e[3mTeam Deleted\e[0m"
+      home_name = game.home_team&.name || "\e[3mTeam Deleted\e[0m"
+      puts "#{index + 1}. \e[38;5;214m#{away_name}\e[0m at \e[36m#{home_name}\e[0m"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      print "\nEnter the ID of the game you wish to update: "
+      print "\nEnter the number of the game you wish to update: "
       choice = gets.chomp
 
-      game = Game.find_by(id: choice)
+      game = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, games.size)
+               games[choice.to_i - 1]
+             end
 
       if game
         display_game(game)
@@ -130,16 +141,21 @@ class GameManager
 
   def delete_game
     puts "\n-= Delete Game =-"
-    Game.all.each do |game|
-      puts "#{game.id}. \e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m at \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m"
+    games = Game.all.to_a
+
+    games.each_with_index do |game, index|
+      away_name = game.away_team&.name || "\e[3mTeam Deleted\e[0m"
+      home_name = game.home_team&.name || "\e[3mTeam Deleted\e[0m"
+      puts "#{index + 1}. \e[38;5;214m#{away_name}\e[0m at \e[36m#{home_name}\e[0m"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      print "\nEnter the ID of the game you wish to delete: "
+      print "\nEnter the number of the game you wish to delete: "
       choice = gets.chomp
 
-      game = Game.find_by(id: choice)
+      game = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, games.size)
+               games[choice.to_i - 1]
+             end
 
       if game
         puts "=" * 50
@@ -201,38 +217,42 @@ class GameManager
     }
 
     puts "Pick the \e[38;5;214mAway\e[0m and \e[36mHome\e[0m teams"
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
 
-    puts "\nEnter the team's ID to select them"
+    puts "\nEnter the team's number to select them"
     puts "(press Enter to keep the current value)" if existing_game
 
+    away_team_label = game_hash[:away_team_id] ? Team.find(game_hash[:away_team_id]).name : nil
     loop do
-      print "\e[38;5;214mAway Team ID#{" [#{game_hash[:away_team_id]}]" if existing_game}: \e[0m"
+      print "\e[38;5;214mAway Team#{" [#{away_team_label}]" if existing_game}: \e[0m"
       input = gets.chomp
       break if input.empty? && existing_game
 
-      choice = input.to_i
-      if Team.find_by(id: choice)
-        game_hash[:away_team_id] = choice
+      if input.match?(/\A\d+\z/) && input.to_i.between?(1, teams.size)
+        game_hash[:away_team_id] = teams[input.to_i - 1].id
         break
       else
         puts FAILURE_MESSAGE
       end
     end
 
+    home_team_label = game_hash[:home_team_id] ? Team.find(game_hash[:home_team_id]).name : nil
     loop do
-      print "\e[36mHome Team ID#{" [#{game_hash[:home_team_id]}]" if existing_game}: \e[0m"
+      print "\e[36mHome Team#{" [#{home_team_label}]" if existing_game}: \e[0m"
       input = gets.chomp
       break if input.empty? && existing_game
 
-      choice = input.to_i
-      if game_hash[:away_team_id] == choice
-        puts "⚠️ \e[33mHome and Away teams cannot be the same!\e[0m"
-      elsif Team.find_by(id: choice)
-        game_hash[:home_team_id] = choice
-        break
+      if input.match?(/\A\d+\z/) && input.to_i.between?(1, teams.size)
+        selected_team = teams[input.to_i - 1]
+        if game_hash[:away_team_id] == selected_team.id
+          puts "⚠️ \e[33mHome and Away teams cannot be the same!\e[0m"
+        else
+          game_hash[:home_team_id] = selected_team.id
+          break
+        end
       else
         puts FAILURE_MESSAGE
       end

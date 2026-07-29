@@ -17,15 +17,19 @@ class TeamManager
 
   def view_team
     puts "\n-= View Team Details =-"
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
+
     loop do
-      print "\nEnter the ID of the team you wish to view: "
+      print "\nEnter the number of the team you wish to view: "
       choice = gets.chomp
 
-      team = Team.find_by(id: choice)
+      team = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, teams.size)
+               teams[choice.to_i - 1]
+             end
 
       if team
         puts "\n#{team.name} (ID #{team.id})"
@@ -90,16 +94,19 @@ class TeamManager
   def update_team
     puts "\n-= Update Team =-"
 
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      print "\nEnter the ID of the team you wish to edit: "
+      print "\nEnter the number of the team you wish to update: "
       choice = gets.chomp
 
-      team = Team.find_by(id: choice)
+      team = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, teams.size)
+               teams[choice.to_i - 1]
+             end
 
       if team
         loop do
@@ -140,16 +147,19 @@ class TeamManager
 
   def delete_team
     puts "\n-= Delete Team =-"
-    Team.all.each do |team|
-      puts "#{team.id}. #{team.name}"
+    teams = Team.all.to_a
+
+    teams.each_with_index do |team, index|
+      puts "#{index + 1}. #{team.name}"
     end
-    puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      print "\nEnter the ID of the team you wish to delete: "
+      print "\nEnter the number of the team you wish to delete: "
       choice = gets.chomp
 
-      team = Team.find_by(id: choice)
+      team = if choice.match?(/\A\d+\z/) && choice.to_i.between?(1, teams.size)
+               teams[choice.to_i - 1]
+             end
 
       if team
         puts "=" * 50
