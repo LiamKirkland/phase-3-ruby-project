@@ -22,7 +22,7 @@ class TeamManager
     end
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
     loop do
-      puts "\nEnter the ID of the team you wish to view:"
+      print "\nEnter the ID of the team you wish to view: "
       choice = gets.chomp
 
       team = Team.find_by(id: choice)
@@ -59,7 +59,7 @@ class TeamManager
     loop do
       name = ""
       loop do
-        puts "\nEnter your team name:"
+        print "\nEnter your team name: "
         name = gets.chomp
 
         break unless name == ""
@@ -96,7 +96,7 @@ class TeamManager
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      puts "\nEnter the ID of the team you wish to edit:"
+      print "\nEnter the ID of the team you wish to edit: "
       choice = gets.chomp
 
       team = Team.find_by(id: choice)
@@ -146,7 +146,7 @@ class TeamManager
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      puts "\nEnter the ID of the team you wish to delete:"
+      print "\nEnter the ID of the team you wish to delete: "
       choice = gets.chomp
 
       team = Team.find_by(id: choice)
@@ -194,7 +194,7 @@ class TeamManager
       name = team.name
       loop do
         puts "Your current team name is #{team.name}"
-        puts "\nEnter the new team name:"
+        print "\nEnter the new team name: "
         name = gets.chomp
 
         break unless name == ""
@@ -246,7 +246,7 @@ class TeamManager
         end
       end
 
-      puts "Enter the ID of the player you want to add or remove from the team. Type quit when you're finished:"
+      print "Enter the ID of the player you want to add or remove from the team. Type quit when you're finished: "
       choice = gets.chomp.downcase
 
       break if ["quit", "q"].include?(choice)

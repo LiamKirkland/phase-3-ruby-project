@@ -89,7 +89,7 @@ class GameManager
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      puts "\nEnter the ID of the game you wish to update:"
+      print "\nEnter the ID of the game you wish to update: "
       choice = gets.chomp
 
       game = Game.find_by(id: choice)
@@ -136,7 +136,7 @@ class GameManager
     puts "\e[3mNote - Numbers may skip as they are based on IDs\e[0m"
 
     loop do
-      puts "\nEnter the ID of the game you wish to delete:"
+      print "\nEnter the ID of the game you wish to delete: "
       choice = gets.chomp
 
       game = Game.find_by(id: choice)
