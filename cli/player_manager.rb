@@ -31,6 +31,8 @@ class PlayerManager
                end
 
       if player
+        display_banner
+        puts "\n-= View Player Details =-"
         puts "\n#{player.name} (ID #{player.id})"
         puts "Current Team: #{player.team&.name || "\e[3mNo team\e[0m"}"
         puts "Rating: #{player.total_skill}"

@@ -36,6 +36,8 @@ class GameManager
              end
 
       if game
+        display_banner
+        puts "\n-= View Game Details =-"
         puts "\n\e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m v. \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m (ID #{game.id})"
         puts "Final Score: \e[38;5;214m#{game.away_score}\e[0m to \e[36m#{game.home_score}\e[0m"
         away_star = if game.away_team.nil?
