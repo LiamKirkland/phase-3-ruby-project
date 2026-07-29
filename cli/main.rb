@@ -13,6 +13,7 @@ class BackyardBaseball
   end
 
   def display_main_menu
+    display_banner
     puts "\n-= Backyard Baseball =-"
     puts "1. Team Management"
     puts "2. Game Management"
@@ -36,8 +37,6 @@ class BackyardBaseball
       when "q", "quit", "exit"
         puts "Goodbye!"
         break
-      else
-        puts FAILURE_MESSAGE
       end
     end
   end
@@ -46,6 +45,7 @@ class BackyardBaseball
 
   def team_menu
     loop do
+      display_banner
       puts "\n-= Team Management =-"
       puts "1. View All Teams"
       puts "2. View Team Details"
@@ -58,21 +58,24 @@ class BackyardBaseball
       choice = gets.chomp.downcase
 
       case choice
-      when "1" then @tm.view_all_teams
-      when "2" then @tm.view_team
+      when "1"
+        @tm.view_all_teams
+        pause
+      when "2"
+        @tm.view_team
+        pause
       when "3" then @tm.create_team
       when "4" then @tm.update_team
       when "5" then @tm.delete_team
       when "b", "back"
         break
-      else
-        puts FAILURE_MESSAGE
       end
     end
   end
 
   def game_menu
     loop do
+      display_banner
       puts "\n-= Game Management =-"
       puts "1. View All Games"
       puts "2. View Game Details"
@@ -85,21 +88,24 @@ class BackyardBaseball
       choice = gets.chomp.downcase
 
       case choice
-      when "1" then @gm.view_all_games
-      when "2" then @gm.view_game
+      when "1"
+        @gm.view_all_games
+        pause
+      when "2"
+        @gm.view_game
+        pause
       when "3" then @gm.create_game
       when "4" then @gm.update_game
       when "5" then @gm.delete_game
       when "b", "back"
         break
-      else
-        puts FAILURE_MESSAGE
       end
     end
   end
 
   def player_menu
     loop do
+      display_banner
       puts "\n-= Player Management =-"
       puts "1. View All Players"
       puts "2. View Player Details"
@@ -112,15 +118,17 @@ class BackyardBaseball
       choice = gets.chomp.downcase
 
       case choice
-      when "1" then @pm.view_all_players
-      when "2" then @pm.view_player
+      when "1"
+        @pm.view_all_players
+        pause
+      when "2"
+        @pm.view_player
+        pause
       when "3" then @pm.create_player
       when "4" then @pm.update_player
       when "5" then @pm.delete_player
       when "b", "back"
         break
-      else
-        puts FAILURE_MESSAGE
       end
     end
   end

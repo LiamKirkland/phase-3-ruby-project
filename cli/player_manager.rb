@@ -1,5 +1,6 @@
 class PlayerManager
   def view_all_players
+    display_banner
     puts "\n-=All Players =-"
     players = Player.all
 
@@ -14,6 +15,7 @@ class PlayerManager
   end
 
   def view_player
+    display_banner
     puts "\n-= View Player Details =-"
     players = Player.all.to_a
 
@@ -45,6 +47,7 @@ class PlayerManager
   end
 
   def create_player
+    display_banner
     puts "\n-= Create New Player =-"
     loop do
       player_hash = prompt_player_attributes
@@ -73,6 +76,7 @@ class PlayerManager
   end
 
   def update_player
+    display_banner
     puts "\n-= Update Player =-"
     players = Player.all.to_a
 
@@ -122,6 +126,7 @@ class PlayerManager
   end
 
   def delete_player
+    display_banner
     puts "\n-= Delete Player =-"
     players = Player.all.to_a
 
@@ -253,11 +258,9 @@ class PlayerManager
       end
 
       total = player_hash.values_at(*skill_keys).sum
-      if total <= 25
-        break
-      else
-        puts "⚠️ \e[33mA player's skills cannot total more than 25. Please re-enter skills.\e[0m"
-      end
+      break if total <= 25
+
+      puts "⚠️ \e[33mA player's skills cannot total more than 25. Please re-enter skills.\e[0m"
     end
 
     player_hash

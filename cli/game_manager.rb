@@ -2,6 +2,7 @@ require "date"
 
 class GameManager
   def view_all_games
+    display_banner
     puts "\n-=All Games =-"
     games = Game.all
 
@@ -16,6 +17,7 @@ class GameManager
   end
 
   def view_game
+    display_banner
     puts "\n-= View Game Details =-"
     games = Game.all.to_a
 
@@ -60,6 +62,7 @@ class GameManager
   end
 
   def create_game
+    display_banner
     puts "\n-= Create New Game =-"
     loop do
       game_hash = prompt_game_attributes
@@ -88,6 +91,7 @@ class GameManager
   end
 
   def update_game
+    display_banner
     puts "\n-= Update Game =-"
     games = Game.all.to_a
 
@@ -140,6 +144,7 @@ class GameManager
   end
 
   def delete_game
+    display_banner
     puts "\n-= Delete Game =-"
     games = Game.all.to_a
 
@@ -200,7 +205,11 @@ class GameManager
       return existing_date if input.empty? && existing_date
 
       begin
-        return DateTime.strptime(input, "%m/%d/%Y")
+        parsed_date = DateTime.strptime(input, "%m/%d/%Y")
+
+        return parsed_date unless parsed_date > DateTime.now
+
+        puts "⚠️ \e[33mDate cannot be in the future.\e[0m"
       rescue ArgumentError
         puts FAILURE_MESSAGE
       end

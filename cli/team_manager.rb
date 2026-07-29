@@ -2,6 +2,7 @@ require_relative "../config/environment"
 
 class TeamManager
   def view_all_teams
+    display_banner
     puts "\n-=All Teams =-"
     teams = Team.all
 
@@ -16,6 +17,7 @@ class TeamManager
   end
 
   def view_team
+    display_banner
     puts "\n-= View Team Details =-"
     teams = Team.all.to_a
 
@@ -58,6 +60,7 @@ class TeamManager
   end
 
   def create_team
+    display_banner
     puts "\n-= Create New Team =-"
 
     loop do
@@ -92,6 +95,7 @@ class TeamManager
   end
 
   def update_team
+    display_banner
     puts "\n-= Update Team =-"
 
     teams = Team.all.to_a
@@ -109,28 +113,31 @@ class TeamManager
              end
 
       if team
-        loop do
-          puts "\n#{team.name} (ID #{team.id})"
-          puts "Players:"
-          if team.players.empty?
-            puts "  \e[3mThis team has no players.\e[0m"
-          else
-            team.players.each do |player|
-              puts "  ID #{player.id}: #{player.name} (Rating: #{player.total_skill})"
-            end
+        puts "\n#{team.name} (ID #{team.id})"
+        puts "Players:"
+        if team.players.empty?
+          puts "  \e[3mThis team has no players.\e[0m"
+        else
+          team.players.each do |player|
+            puts "  ID #{player.id}: #{player.name} (Rating: #{player.total_skill})"
           end
-          puts "\n1. Team Name"
-          puts "2. Players"
-          puts "b. Back to Team Management"
-          puts "\n\e[3mNote: If you are trying to add/remove games to this team, you must edit the game(s) directly.\e[0m"
-          print "Select what you want to edit:"
+        end
+        puts "\n1. Team Name"
+        puts "2. Players"
+        puts "b. Back to Team Management"
+        puts "\n\e[3mNote: If you are trying to add/remove games to this team, you must edit the game(s) directly.\e[0m"
+
+        loop do
+          print "Select what you want to edit: "
           choice = gets.chomp.downcase
 
           case choice
           when "1"
             update_name(team)
+            break
           when "2"
             update_players(team.id)
+            break
           when "b", "back", "exit"
             puts "Backing out of edit."
             break
@@ -146,6 +153,7 @@ class TeamManager
   end
 
   def delete_team
+    display_banner
     puts "\n-= Delete Team =-"
     teams = Team.all.to_a
 
