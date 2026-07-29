@@ -114,9 +114,9 @@ class TeamManager
           end
           puts "\n1. Team Name"
           puts "2. Players"
-          puts "q. Quit"
+          puts "b. Back to Team Management"
           puts "\n\e[3mNote: If you are trying to add/remove games to this team, you must edit the game(s) directly.\e[0m"
-          puts "Select what you want to edit:"
+          print "Select what you want to edit:"
           choice = gets.chomp.downcase
 
           case choice
@@ -124,7 +124,7 @@ class TeamManager
             update_name(team)
           when "2"
             update_players(team.id)
-          when "q", "quit", "exit"
+          when "b", "back", "exit"
             puts "Backing out of edit."
             break
           else
@@ -246,10 +246,10 @@ class TeamManager
         end
       end
 
-      print "Enter the ID of the player you want to add or remove from the team. Type quit when you're finished: "
+      print "Enter the ID of the player you want to add or remove from the team. Type back when you're finished: "
       choice = gets.chomp.downcase
 
-      break if ["quit", "q"].include?(choice)
+      break if ["back", "b"].include?(choice)
 
       picked_player = Player.find_by(id: choice)
 
