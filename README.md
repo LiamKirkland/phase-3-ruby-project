@@ -11,8 +11,8 @@
     AR                          .F.Gi||BASEBALLBASEBALLBASEB       LA
     BD                        .F.phillyS.F.phillyS.F.Gi||BASE      LY
     EB      BA               SEBALLBASEBA||S.F.phillyS.F.philly    BK
-    SA    Gi||B             ASEBALLBASEBALLBASEBA||S.F.phillyS.F   AC
-    AC      nt              sS.F.Gi||BASEBALLBASEBALLBASEBA||S.F   SA
+    SA    SE|BA             ASEBALLBASEBALLBASEBA||S.F.phillyS.F   AC
+    AC      LL              sS.F.Gi||BASEBALLBASEBALLBASEBA||S.F   SA
     BK                      ntsS.F.phillyS.F.Gi||BASEBALL          EB
       O                         EBALLBASEBA|'`'''''''''''           O
       '::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::'
