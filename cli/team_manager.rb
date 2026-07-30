@@ -7,7 +7,7 @@ class TeamManager
     teams = Team.all
 
     if teams.empty?
-      puts "No teams founds."
+      puts "No teams found."
     else
       teams.each do |team|
         display_team(team)
@@ -26,6 +26,10 @@ class TeamManager
     end
 
     loop do
+      if teams.none?
+        puts "No teams found."
+        break
+      end
       print "\nEnter the number of the team you wish to view: "
       choice = gets.chomp
 
@@ -107,6 +111,11 @@ class TeamManager
     end
 
     loop do
+      if teams.none?
+        puts "No teams found."
+        pause
+        break
+      end
       print "\nEnter the number of the team you wish to update: "
       choice = gets.chomp
 
@@ -164,6 +173,11 @@ class TeamManager
     end
 
     loop do
+      if teams.none?
+        puts "No teams found."
+        pause
+        break
+      end
       print "\nEnter the number of the team you wish to delete: "
       choice = gets.chomp
 

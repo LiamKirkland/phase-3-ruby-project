@@ -7,7 +7,7 @@ class GameManager
     games = Game.all
 
     if games.empty?
-      puts "No games founds."
+      puts "No games found."
     else
       games.each do |game|
         display_game(game)
@@ -28,6 +28,10 @@ class GameManager
     end
 
     loop do
+      if games.none?
+        puts "No games found."
+        break
+      end
       print "\nEnter the number of the game you wish to view: "
       choice = gets.chomp
 
@@ -94,6 +98,11 @@ class GameManager
     end
 
     loop do
+      if games.none?
+        puts "No games found."
+        pause
+        break
+      end
       print "\nEnter the number of the game you wish to update: "
       choice = gets.chomp
 
@@ -147,6 +156,11 @@ class GameManager
     end
 
     loop do
+      if games.none?
+        puts "No games found."
+        pause
+        break
+      end
       print "\nEnter the number of the game you wish to delete: "
       choice = gets.chomp
 

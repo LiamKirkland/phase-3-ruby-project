@@ -5,7 +5,7 @@ class PlayerManager
     players = Player.all
 
     if players.empty?
-      puts "No players founds."
+      puts "No players found."
     else
       players.each do |player|
         display_player(player)
@@ -23,6 +23,10 @@ class PlayerManager
       puts "#{index + 1}. #{player.name}"
     end
     loop do
+      if players.none?
+        puts "No players found."
+        break
+      end
       print "\nEnter the number of the player you wish to view: "
       choice = gets.chomp
 
@@ -86,6 +90,11 @@ class PlayerManager
       puts "#{index + 1}. #{player.name}"
     end
     loop do
+      if players.none?
+        puts "No players found."
+        pause
+        break
+      end
       print "\nEnter the number of the player you wish to update: "
       choice = gets.chomp
 
@@ -136,6 +145,11 @@ class PlayerManager
       puts "#{index + 1}. #{player.name}"
     end
     loop do
+      if players.none?
+        puts "No players found."
+        pause
+        break
+      end
       print "\nEnter the number of the player you wish to delete: "
       choice = gets.chomp
 
