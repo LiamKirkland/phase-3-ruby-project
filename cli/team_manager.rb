@@ -19,7 +19,7 @@ class TeamManager
   def view_team
     display_banner
     puts "\n-= View Team Details =-"
-    teams = Team.all.to_a
+    teams = Team.order(:name).to_a
 
     teams.each_with_index do |team, index|
       puts "#{index + 1}. #{team.name}"
@@ -100,7 +100,7 @@ class TeamManager
     display_banner
     puts "\n-= Update Team =-"
 
-    teams = Team.all.to_a
+    teams = Team.order(:name).to_a
 
     teams.each_with_index do |team, index|
       puts "#{index + 1}. #{team.name}"
@@ -157,7 +157,7 @@ class TeamManager
   def delete_team
     display_banner
     puts "\n-= Delete Team =-"
-    teams = Team.all.to_a
+    teams = Team.order(:name).to_a
 
     teams.each_with_index do |team, index|
       puts "#{index + 1}. #{team.name}"

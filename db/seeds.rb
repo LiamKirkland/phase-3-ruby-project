@@ -79,27 +79,77 @@ Player.create!([
 ])
 
 Game.create!([
-  # Round-robin (5 games per team)
-  { home_team: melonheads, away_team: dogs,      home_score: 7, away_score: 4, date_played: Date.new(2026, 4, 4) },
-  { home_team: bandits,    away_team: melonheads, home_score: 3, away_score: 9, date_played: Date.new(2026, 4, 11) },
-  { home_team: melonheads, away_team: renegades,  home_score: 6, away_score: 6, date_played: Date.new(2026, 4, 18) },
-  { home_team: vipers,     away_team: melonheads, home_score: 2, away_score: 8, date_played: Date.new(2026, 4, 25) },
-  { home_team: melonheads, away_team: comets,     home_score: 5, away_score: 4, date_played: Date.new(2026, 5, 2) },
-  { home_team: dogs,       away_team: bandits,    home_score: 5, away_score: 5, date_played: Date.new(2026, 5, 9) },
-  { home_team: renegades,  away_team: dogs,       home_score: 3, away_score: 7, date_played: Date.new(2026, 5, 16) },
-  { home_team: dogs,       away_team: vipers,     home_score: 9, away_score: 2, date_played: Date.new(2026, 5, 23) },
-  { home_team: dogs,       away_team: comets,     home_score: 4, away_score: 6, date_played: Date.new(2026, 5, 30) },
-  { home_team: bandits,    away_team: renegades,  home_score: 6, away_score: 3, date_played: Date.new(2026, 6, 6) },
-  { home_team: bandits,    away_team: vipers,     home_score: 4, away_score: 4, date_played: Date.new(2026, 6, 13) },
-  { home_team: comets,     away_team: bandits,    home_score: 5, away_score: 7, date_played: Date.new(2026, 6, 20) },
-  { home_team: renegades,  away_team: vipers,     home_score: 6, away_score: 5, date_played: Date.new(2026, 6, 27) },
-  { home_team: comets,     away_team: renegades,  home_score: 3, away_score: 3, date_played: Date.new(2026, 7, 4) },
-  { home_team: vipers,     away_team: comets,     home_score: 8, away_score: 6, date_played: Date.new(2026, 7, 11) },
+  { home_team: melonheads, away_team: dogs,      home_score: 7, away_score: 4, date_played: Date.new(2026, 4, 4),
+    home_team_name: melonheads.name, home_star: "Pablo Sanchez",
+    away_team_name: dogs.name,       away_star: "Junebug Farrell" },
 
-  # Rematches (1 extra game per team)
-  { home_team: dogs,       away_team: melonheads, home_score: 5, away_score: 5, date_played: Date.new(2026, 7, 18) },
-  { home_team: renegades,  away_team: bandits,    home_score: 7, away_score: 8, date_played: Date.new(2026, 7, 22) },
-  { home_team: comets,     away_team: vipers,     home_score: 4, away_score: 9, date_played: Date.new(2026, 7, 26) },
+  { home_team: bandits,    away_team: melonheads, home_score: 3, away_score: 9, date_played: Date.new(2026, 4, 11),
+    home_team_name: bandits.name,    home_star: "Ronaldo Devers",
+    away_team_name: melonheads.name, away_star: "Pete Wheeler" },
+
+  { home_team: melonheads, away_team: renegades,  home_score: 6, away_score: 6, date_played: Date.new(2026, 4, 18),
+    home_team_name: melonheads.name, home_star: "Kiesha Phillips",
+    away_team_name: renegades.name,  away_star: "Priya Anand" },
+
+  { home_team: vipers,     away_team: melonheads, home_score: 2, away_score: 8, date_played: Date.new(2026, 4, 25),
+    home_team_name: vipers.name,     home_star: "Tony Delvecchio",
+    away_team_name: melonheads.name, away_star: "Pablo Sanchez" },
+
+  { home_team: melonheads, away_team: comets,     home_score: 5, away_score: 4, date_played: Date.new(2026, 5, 2),
+    home_team_name: melonheads.name, home_star: "Dimitri Petrovic",
+    away_team_name: comets.name,     away_star: "Felix Marsh" },
+
+  { home_team: dogs,       away_team: bandits,    home_score: 5, away_score: 5, date_played: Date.new(2026, 5, 9),
+    home_team_name: dogs.name,       home_star: "Rusty Cogsworth",
+    away_team_name: bandits.name,    away_star: "Maria Luna" },
+
+  { home_team: renegades,  away_team: dogs,       home_score: 3, away_score: 7, date_played: Date.new(2026, 5, 16),
+    home_team_name: renegades.name,  home_star: "Owen Marsh",
+    away_team_name: dogs.name,       away_star: "Amir Khan" },
+
+  { home_team: dogs,       away_team: vipers,     home_score: 9, away_score: 2, date_played: Date.new(2026, 5, 23),
+    home_team_name: dogs.name,       home_star: "Winnie Duval",
+    away_team_name: vipers.name,     away_star: "Achmed Khan" },
+
+  { home_team: dogs,       away_team: comets,     home_score: 4, away_score: 6, date_played: Date.new(2026, 5, 30),
+    home_team_name: dogs.name,       home_star: "Freddy Fernandez",
+    away_team_name: comets.name,     away_star: "Georgia Pruitt" },
+
+  { home_team: bandits,    away_team: renegades,  home_score: 6, away_score: 3, date_played: Date.new(2026, 6, 6),
+    home_team_name: bandits.name,    home_star: "Jorge Garcia",
+    away_team_name: renegades.name,  away_star: "Nell Ocheltree" },
+
+  { home_team: bandits,    away_team: vipers,     home_score: 4, away_score: 4, date_played: Date.new(2026, 6, 13),
+    home_team_name: bandits.name,    home_star: "Keiko Ando",
+    away_team_name: vipers.name,     away_star: "Lisa Crocket" },
+
+  { home_team: comets,     away_team: bandits,    home_score: 5, away_score: 7, date_played: Date.new(2026, 6, 20),
+    home_team_name: comets.name,     home_star: "Sofia Reyes",
+    away_team_name: bandits.name,    away_star: "Danny Rodriguez" },
+
+  { home_team: renegades,  away_team: vipers,     home_score: 6, away_score: 5, date_played: Date.new(2026, 6, 27),
+    home_team_name: renegades.name,  home_star: "Isla Fontaine",
+    away_team_name: vipers.name,     away_star: "Bartholomew Cruz" },
+
+  { home_team: comets,     away_team: renegades,  home_score: 3, away_score: 3, date_played: Date.new(2026, 7, 4),
+    home_team_name: comets.name,     home_star: "Miles Okonkwo",
+    away_team_name: renegades.name,  away_star: "Tobias Wren" },
+
+  { home_team: vipers,     away_team: comets,     home_score: 8, away_score: 6, date_played: Date.new(2026, 7, 11),
+    home_team_name: vipers.name,     home_star: "Desmond Okafor",
+    away_team_name: comets.name,     away_star: "Cormac Delaney" },
+
+  { home_team: dogs,       away_team: melonheads, home_score: 5, away_score: 5, date_played: Date.new(2026, 7, 18),
+    home_team_name: dogs.name,       home_star: "Scrappy Alvarez",
+    away_team_name: melonheads.name, away_star: "Sally Dobbs" },
+
+  { home_team: renegades,  away_team: bandits,    home_score: 7, away_score: 8, date_played: Date.new(2026, 7, 22),
+    home_team_name: renegades.name,  home_star: "Willow Hartley",
+    away_team_name: bandits.name,    away_star: "Pumpkin Marchetti" },
+
+  { home_team: comets,     away_team: vipers,     home_score: 4, away_score: 9, date_played: Date.new(2026, 7, 26),
+    home_team_name: comets.name,     home_star: "Cormac Delaney",
+    away_team_name: vipers.name,     away_star: "Nadia Volkov" },
 ])
 
 puts "Seeded #{Team.count} teams, #{Player.count} players (#{Player.where(team_id: nil).count} free agents), and #{Game.count} games."

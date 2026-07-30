@@ -19,12 +19,12 @@ class GameManager
   def view_game
     display_banner
     puts "\n-= View Game Details =-"
-    games = Game.all.to_a
+    games = Game.order(:date_played).to_a
 
     games.each_with_index do |game, index|
-      away_name = game.away_team&.name || "\e[3mTeam Deleted\e[0m"
-      home_name = game.home_team&.name || "\e[3mTeam Deleted\e[0m"
-      puts "#{index + 1}. \e[38;5;214m#{away_name}\e[0m at \e[36m#{home_name}\e[0m"
+      away_name = game.away_team&.name || game.away_team_name
+      home_name = game.home_team&.name || game.home_team_name
+      puts "#{index + 1}. \e[38;5;214m#{away_name}\e[0m at \e[36m#{home_name}\e[0m - #{game.date_played.strftime('%m/%d/%Y')}"
     end
 
     loop do
@@ -38,23 +38,9 @@ class GameManager
       if game
         display_banner
         puts "\n-= View Game Details =-"
-        puts "\n\e[38;5;214m#{game.away_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m v. \e[36m#{game.home_team&.name || "\e[3mTeam Deleted\e[0m"}\e[0m (ID #{game.id})"
+        puts "\n\e[38;5;214m#{game.away_team&.name || game.away_team_name}\e[0m v. \e[36m#{game.home_team&.name || game.home_team_name}\e[0m (Game ID #{game.id})"
         puts "Final Score: \e[38;5;214m#{game.away_score}\e[0m to \e[36m#{game.home_score}\e[0m"
-        away_star = if game.away_team.nil?
-                      "\e[3mTeam Deleted\e[0m"
-                    elsif game.away_team.players.empty?
-                      "\e[3mNo Players\e[0m"
-                    else
-                      game.away_team.players.max_by(&:total_skill).name
-                    end
-        home_star = if game.home_team.nil?
-                      "\e[3mTeam Deleted\e[0m"
-                    elsif game.home_team.players.empty?
-                      "\e[3mNo Players\e[0m"
-                    else
-                      game.home_team.players.max_by(&:total_skill).name
-                    end
-        puts "Star Players: \e[38;5;214m#{away_star}\e[0m & \e[36m#{home_star}\e[0m"
+        puts "Star Players: \e[38;5;214m#{game.away_star}\e[0m & \e[36m#{game.home_star}\e[0m"
         puts "Played on #{game.date_played.strftime('%m/%d/%Y')}"
         break
       else
@@ -84,6 +70,10 @@ class GameManager
 
       if ['Y', 'YES'].include?(confirm)
         puts "\n\e[3;32mSaved game to database....\e[0m"
+        new_game.home_team_name = new_game.home_team.name
+        new_game.away_team_name = new_game.away_team.name
+        new_game.home_star = home_team.players.max_by(&:total_skill).name
+        new_game.away_star = away_team.players.max_by(&:total_skill).name
         new_game.save
         break
       else
@@ -95,7 +85,7 @@ class GameManager
   def update_game
     display_banner
     puts "\n-= Update Game =-"
-    games = Game.all.to_a
+    games = Game.order(:date_played).to_a
 
     games.each_with_index do |game, index|
       away_name = game.away_team&.name || "\e[3mTeam Deleted\e[0m"
@@ -148,7 +138,7 @@ class GameManager
   def delete_game
     display_banner
     puts "\n-= Delete Game =-"
-    games = Game.all.to_a
+    games = Game.order(:date_played).to_a
 
     games.each_with_index do |game, index|
       away_name = game.away_team&.name || "\e[3mTeam Deleted\e[0m"

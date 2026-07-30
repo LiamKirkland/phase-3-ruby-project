@@ -161,6 +161,7 @@ class BackyardBaseball
 
       if input.match?(/\A\d+\z/) && input.to_i.between?(1, teams.size)
         game_hash[:away_team_id] = teams[input.to_i - 1].id
+        game_hash[:away_team_name] = teams[input.to_i - 1].name
         break
       else
         puts FAILURE_MESSAGE
@@ -177,6 +178,7 @@ class BackyardBaseball
           puts "⚠️ \e[33mHome and Away teams cannot be the same!\e[0m"
         else
           game_hash[:home_team_id] = selected_team.id
+          game_hash[:home_team_name] = teams[input.to_i - 1].name
           break
         end
       else
@@ -187,24 +189,27 @@ class BackyardBaseball
     away_team = Team.find(game_hash[:away_team_id])
 
     game_events = [
-      "#{event_gen(home_team, away_team, :batting, true)} hits a home run!",
-      "#{event_gen(home_team, away_team, :batting, false)} hits a pop fly... and it gets caught. OUT!",
-      "#{event_gen(home_team, away_team, :fielding, true)} catches a pop fly.",
-      "#{event_gen(home_team, away_team, :pitching, false)} hits the batter, they get walked.",
-      "#{event_gen(home_team, away_team, :running, true)} steals 3rd base!",
-      "#{event_gen(home_team, away_team, :fielding, false)} drops a pop fly.",
-      "#{event_gen(home_team, away_team, :batting, false)} makes a double play.",
-      "#{event_gen(home_team, away_team, :batting, false)} almost drops the ball!",
-      "#{event_gen(home_team, away_team, :batting, true)} bunts the ball and barely makes it to first.",
-      "#{event_gen(home_team, away_team, :batting, false)} hits a foul ball.",
-      "#{event_gen(home_team, away_team, :batting, false)} strikes out swinging.",
-      "#{event_gen(home_team, away_team, :running, true)} slides into home just in time!",
-      "#{event_gen(home_team, away_team, :fielding, true)} makes a diving catch in the outfield!",
-      "#{event_gen(home_team, away_team, :pitching, false)} walks the batter on four straight balls.",
-      "#{event_gen(home_team, away_team, :running, true)} beats the throw to first by a step!",
-      "#{event_gen(home_team, away_team, :fielding, false)} overthrows first base, the ball sails into the stands.",
-      "#{event_gen(home_team, away_team, :pitching, true)} throws a curveball for strike three!",
-
+      build_event(" hits a home run!", home_team, away_team, :batting, true),
+      build_event(" hits a pop fly... and it gets caught. OUT!", home_team, away_team, :batting, false),
+      build_event(" catches a pop fly.", home_team, away_team, :fielding, true),
+      build_event(" hits the batter, they get walked.", home_team, away_team, :pitching, false),
+      build_event(" steals 3rd base!", home_team, away_team, :running, true),
+      build_event(" drops a pop fly.", home_team, away_team, :fielding, false),
+      build_event(" makes a double play.", home_team, away_team, :batting, false),
+      build_event(" almost drops the ball!", home_team, away_team, :batting, false),
+      build_event(" bunts the ball and barely makes it to first.", home_team, away_team, :batting, true),
+      build_event(" hits a foul ball.", home_team, away_team, :batting, false),
+      build_event(" strikes out swinging.", home_team, away_team, :batting, false),
+      build_event(" slides into home just in time!", home_team, away_team, :running, true),
+      build_event(" makes a diving catch in the outfield!", home_team, away_team, :fielding, true),
+      build_event(" walks the batter on four straight balls.", home_team, away_team, :pitching, false),
+      build_event(" beats the throw to first by a step!", home_team, away_team, :running, true),
+      build_event(" overthrows first base, the ball sails into the stands.", home_team, away_team, :fielding, false),
+      build_event(" throws a curveball for strike three!", home_team, away_team, :pitching, true),
+      build_event(" gets caught trying to steal second, OUT!", home_team, away_team, :running, false),
+      build_event(" watches strike three sail right by.", home_team, away_team, :batting, false),
+      build_event(" swings at the air, strike three!", home_team, away_team, :batting, false),
+      build_event(" gets obliterated by a falling meteor.", home_team, away_team, :batting, false),
     ]
 
     display_banner
@@ -212,13 +217,21 @@ class BackyardBaseball
     puts "Simulating \e[38;5;214m#{away_team.name}\e[0m v. \e[36m#{home_team.name}\e[0m..."
     puts
     game_events.sample(7).each do |event|
-      puts event
+      puts event[:text]
+      if event[:text].include?("meteor")
+        player = event[:player]
+        sleep 1.5
+        puts "\e[3;31mDeleted #{player.name} from the database...\e[0m"
+        player.destroy
+      end
       sleep 1.5
     end
 
     final_scores = simulate_and_display_result(home_team, away_team)
     game_hash[:away_score] = final_scores[:away_score]
     game_hash[:home_score] = final_scores[:home_score]
+    game_hash[:home_star] = home_team.players.max_by(&:total_skill).name
+    game_hash[:away_star] = away_team.players.max_by(&:total_skill).name
     Game.create(game_hash)
     pause
   end
@@ -230,7 +243,12 @@ class BackyardBaseball
              else
                team.players.sample
              end
-    "#{color}#{player.name}\e[0m"
+    ["#{color}#{player.name}\e[0m", player]
+  end
+
+  def build_event(text_template, home, away, stat, success)
+    name, player = event_gen(home, away, stat, success)
+    { text: "#{name}#{text_template}", player: player }
   end
 
   def simulate_and_display_result(home_team, away_team, k = 0.03)
@@ -280,11 +298,11 @@ class BackyardBaseball
       ⣠⡏⠀⠀⠀⣼⣿⣿⣿⡿⠛⠉⢻⣞⣧⠀⠀⠀⠉⠛⠁⠀⠀⠀⠀⡿⣿⣿⣦⣀⠀⠀⠀⠀⣠⣾⡏⢸⣠⣧⣤⣄⣤⣤⣤⣤⣤⣴⣾⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
       ⣿⠀⠀⠀⢸⣿⣿⠛⠁⠀⠀⠀⠀⠻⣯⣷⣄⠀⠀⠀⠀⠀⠀⢀⣼⠁⠘⠿⣿⣿⣻⣿⣿⣿⣿⠏⠀⣾⣿⣿⣿⣿⣿⣿⣿⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
       ⣿⣇⠀⠀⠈⢿⣿⢧⣴⣶⡆⠀⠀⠀⢿⣿⣿⢳⢦⣤⣤⣤⣶⣿⠟⠀⠀⠀⠀⠉⠉⠛⠋⢩⡤⠖⠒⠛⠛⡿⢁⣾⠋⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⣷⠀⠀⠀⠀⢀⣤⠤⠤⣀⡀⠀
-      ⣿⣿⣆⠀⠀⠀⠙⠻⠿⠛⠃⠀⠀⠀⣸⡙⠻⢿⣿⣿⣿⣿⠿⠋⠀⣀⡤⠤⠒⠚⠳⣄⢠⣿⠁⠀⠀⠀⢠⠇⡏⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⠀⠀⢀⡴⢫⡇⠀⠀⠀⠈⠙
-      ⠘⣿⣿⣷⣄⡀⠀⠀⠀⠀⠀⠀⣀⣼⣿⠇⠀⠀⠀⣀⣀⣀⠀⢀⣼⣿⣦⡀⠀⠀⠀⠈⢻⡏⠀⠀⠀⠀⡞⠀⡇⢸⠀⠀⠀⠀⢰⣾⣶⣶⣶⣶⣶⡏⠀⠀⡼⠀⡞⠀⠀⠀⠀⠀⢸
+      ⣿⣿⣆⠀⠀⠀⠙⠻⠿⠛⠃⠀⠀⠀⣸⡙⠻⢿⣿⣿⣿⣿⠿⠋⠀⣀⡤⠤⠒⠚⠳⣄⢠⣿⠁⠀⠀⠀⢠⠇⡏⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢀⡴⢫⡇⠀⠀⠀⠈⠙
+      ⠘⣿⣿⣷⣄⡀⠀⠀⠀⠀⠀⠀⣀⣼⣿⠇⠀⠀⠀⣀⣀⣀⠀⢀⣼⣿⣦⡀⠀⠀⠀⠈⢻⡏⠀⠀⠀⠀⡞⠀⡇⢸⠀⠀⠀⠀⢰⣶⣶⣶⣶⣶⣶⡏⠀⠀⡼⠀⡞⠀⠀⠀⠀⠀⢸
       ⠀⠈⠻⣿⣿⣿⣶⢶⡶⡶⣶⣾⣿⡿⠋⣠⠴⠚⠉⠁⠀⠉⠙⠺⡿⢿⣿⣿⣦⡀⠀⠀⠀⠀⠀⠀⠀⣸⠃⢰⠀⢸⠀⠀⠀⠀⠘⠛⠛⠿⠿⢿⡏⠀⠀⢰⠃⢠⠇⠀⠀⠀⠀ ⢸
-      ⠀⠀⠀⠈⠙⠻⠿⠼⠽⠿⠿⠟⠋⢰⡟⠁⠀⠀⢀⣤⣄⡀⠀⠀⠹⡆⠙⢿⣿⣿⣦⡀⠀⠀⠀⠀⢰⡇⠀⢸⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⡞⠀⡜⠀⠀⠀⠀⠀⠀⢰
-      ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⢳⡀⠀⠀⠈⢿⡿⠇⠀⠀⣼⠃⠀⠀⠙⢿⣿⣿⣷⠀⠀⠀⠈⡇⠀⢸⠀⡄⠀⠀⠀⠀⢰⣶⣤⣤⣤⣼⠃⠀⢰⠃⢰⠃⠀⠀⠀⠀⠀⠀⢰
+      ⠀⠀⠀⠈⠙⠻⠿⠼⠽⠿⠿⠟⠋⢰⡟⠁⠀⠀⢀⣤⣄⡀⠀⠀⠹⡆⠙⢿⣿⣿⣦⡀⠀⠀⠀⠀⢰⡇⠀⢸⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⡞⠀⡜⠀⠀⠀⠀⠀ ⢸
+      ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⢳⡀⠀⠀⠈⢿⡿⠇⠀⠀⣼⠃⠀⠀⠙⢿⣿⣿⣷⠀⠀⠀⠈⡇⠀⢸⠀⡄⠀⠀⠀⠀⢰⣶⣤⣤⣤⣼⠃⠀⢰⠃⢰⠃⠀⠀⠀⠀⠀ ⢸
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢷⠀⢣⠀⠀⠀⠀⠀⠀⠀⠈⠋⠉⠲⣄⠀⠀⠙⢿⠸⡄⠀⠀⠀⢳⠀⢸⠀⡇⠀⠀⠀⠀⠸⣿⣿⣿⣿⣃⠀⠀⣞⣠⣾⣤⣀⣀⣀⣀⣀⣀⡞
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣆⠈⣇⠀⠀⠀⠀⣠⣤⣀⠀⠀⠀⠘⣆⠀⠀⠸⡄⢳⠀⠀⠀⠸⡆⢸⠀⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠘⠻⢿⣿⣿⣿⣿⡿⠟⠁⠀⠀
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡆⠘⡄⠀⠀⠀⢻⣿⣿⠆⠀⠀⠀⢸⠀⠀⠀⣇⠘⡆⠀⢀⣀⣧⢸⢀⣿⣶⣤⣤⣤⣀⣀⣀⠀⢀⡏⠀⢀⣴⠟⠁⠀⠀⠈⢳⡀⠀⠀⠀

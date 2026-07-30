@@ -17,7 +17,7 @@ class PlayerManager
   def view_player
     display_banner
     puts "\n-= View Player Details =-"
-    players = Player.all.to_a
+    players = Player.order(:name).to_a
 
     players.each_with_index do |player, index|
       puts "#{index + 1}. #{player.name}"
@@ -80,7 +80,7 @@ class PlayerManager
   def update_player
     display_banner
     puts "\n-= Update Player =-"
-    players = Player.all.to_a
+    players = Player.order(:name).to_a
 
     players.each_with_index do |player, index|
       puts "#{index + 1}. #{player.name}"
@@ -130,7 +130,7 @@ class PlayerManager
   def delete_player
     display_banner
     puts "\n-= Delete Player =-"
-    players = Player.all.to_a
+    players = Player.order(:name).to_a
 
     players.each_with_index do |player, index|
       puts "#{index + 1}. #{player.name}"
