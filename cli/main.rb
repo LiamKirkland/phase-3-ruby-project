@@ -221,7 +221,7 @@ class BackyardBaseball
       if event[:text].include?("meteor")
         player = event[:player]
         sleep 1.5
-        puts "\e[3;31mDeleted #{player.name} from the database...\e[0m"
+        puts "\e[3;31mDeleting #{player.name} from the database...\e[0m"
         player.destroy
       end
       sleep 1.5
