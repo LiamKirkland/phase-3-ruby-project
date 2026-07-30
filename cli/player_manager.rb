@@ -239,7 +239,7 @@ class PlayerManager
       end
     end
 
-    puts "\nAssign player's skills (\e[3mNote: Skills must be within 0 and 10pts\e[0m)"
+    puts "\nAssign player's skills (\e[3mNote: Skills must be within 0 and 10pts, total skill cannot exceed 25\e[0m)"
     puts "(press Enter to keep current value)" if existing_player
     loop do
       skill_keys = %i[batting running pitching fielding]
